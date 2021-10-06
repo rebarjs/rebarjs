@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import scrud from '../mixins/scrud'
-import ScrudValue from './ScrudValue.vue'
+import scrud from '~/mixins/scrud'
+import ScrudValue from '~/components/ScrudValue'
 
 /**
  * Build a SCRUD component for an object using a ScrudValue or ScrudComposite for each
