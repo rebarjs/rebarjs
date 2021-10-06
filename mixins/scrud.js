@@ -31,6 +31,7 @@ export default {
     propertyPath: {
       type: String,
       required: false,
+      default: '$',
     },
     jsonLDContextURL: {
       type: String,
