@@ -1,17 +1,7 @@
 import { Schema } from '@hyperjump/json-schema-core'
+import isVarName from 'is-var-name'
 
 export default {
-  data() {
-    return {
-      as: this.getComponent(),
-      label: undefined,
-      componentProps: {
-        id: this.propertyName,
-      },
-      children: this.getChildren(),
-    }
-  },
-
   props: {
     propertyName: {
       type: String,
@@ -51,23 +41,48 @@ export default {
     },
   },
 
+  data() {
+    const id = this.propertyPath === '$' ? this.propertyName : this.propertyPath
+    return {
+      as: undefined,
+      label: undefined,
+      componentProps: {
+        id,
+      },
+      children: undefined,
+      $_jsonSchema: undefined,
+      $_jsonLDContext: undefined,
+      $_typeKeys: undefined,
+    }
+  },
+
+  async fetch() {
+    if (this.$_jsonSchema === undefined) {
+      await this.getJsonSchema()
+    }
+    if (this.children === undefined) {
+      this.children = await this.getChildren()
+    }
+    if (this.as === undefined) {
+      this.as = await this.getComponent()
+    }
+  },
+
   methods: {
-    getComponent() {
-      if (!this.component) {
-        const typeKeys = this.getTypeKeys()
-        for (const key in typeKeys) {
-          const componentKey = typeKeys[key]
-          const component = this.getComponentFor(componentKey)
-          if (component) {
-            this.component = component
-            break
-          }
-        }
-        if (!this.component) {
-          this.component = this.getComponentFor('__default__')
+    async getComponent() {
+      const typeKeys = await this.getTypeKeys()
+      let component
+      for (const key in typeKeys) {
+        const componentKey = typeKeys[key]
+        component = this.getComponentFor(componentKey)
+        if (component) {
+          break
         }
       }
-      return this.component
+      if (!component) {
+        component = this.getComponentFor('__default__')
+      }
+      return component
     },
     getComponentFor(key) {
       const match = this.configMapping.components[key]
@@ -85,24 +100,24 @@ export default {
       }
       return undefined
     },
-    getTypeKeys() {
-      if (!this.typeKeys) {
+    async getTypeKeys() {
+      if (this.$_typeKeys === undefined) {
         // construct the type keys to use in fallback matching for the component to use
         // from the configMapping
         const jsonLDType = this.resolveJsonLDContextURL()
-        const jsonSchemaType = this.jsonSchema
+        const jsonSchemaType = (await this.getJsonSchema())
           ? Schema.uri(this.jsonSchema)
           : undefined
-        const jsonType = typeof this.propertyValue
+        const jsonType = typeof (await this.getPropertyValue())
         const keys = [jsonLDType, jsonSchemaType, jsonType]
-        this.typeKeys = []
+        this.$_typeKeys = []
         for (const typeKey in keys) {
           if (keys[typeKey]) {
-            this.typeKeys.push(keys[typeKey])
+            this.$_typeKeys.push(keys[typeKey])
           }
         }
       }
-      return this.typeKeys
+      return this.$_typeKeys
     },
     resolveJsonLDContextURL() {
       if (this.jsonLDContext) {
@@ -116,65 +131,140 @@ export default {
       }
       return undefined
     },
-    async getJsonSchema() {
-      if (this.jsonSchemaURL) {
-        this.jsonSchema = await Schema.get(this.jsonSchemaURL)
-      }
-      return undefined
+    // eslint-disable-next-line require-await
+    async getJsonSchemaURL() {
+      return this.jsonSchemaURL
     },
-    getChildren() {
+    // eslint-disable-next-line require-await
+    async getJsonLDContextURL() {
+      return this.jsonLDContextURL
+    },
+    async getJsonSchema() {
+      if (this.$_jsonSchema === undefined) {
+        if (this.jsonSchema) {
+          this.$_jsonSchema = this.jsonSchema
+        } else {
+          const jsonSchemaURL = await this.getJsonSchemaURL()
+          if (jsonSchemaURL) {
+            if (jsonSchemaURL) {
+              this.$_jsonSchema = await Schema.get(this.jsonSchemaURL)
+            }
+          }
+        }
+        this.$_jsonSchema = this.$_jsonSchema || null
+      }
+      return this.$_jsonSchema
+    },
+    async getJsonLDContext() {
+      if (this.$_jsonLDContext === undefined) {
+        if (this.jsonLDContext) {
+          this.$_jsonLDContext = this.jsonLDContext
+        } else {
+          const jsonLDContextURL = await this.getJsonLDContextURL()
+          if (jsonLDContextURL) {
+            this.$_jsonLDContext = await this.$cachingClient.get(
+              this.convertToHttps(jsonLDContextURL),
+              { json: true }
+            )
+          }
+        }
+        this.$_jsonLDContext = this.$_jsonLDContext
+          ? this.$_jsonLDContext
+          : null
+      }
+      return this.jsonLDContext
+    },
+    async getChildren() {
       // TODO Need to build the children based on the JSON Schema if available!
-      const children = typeof this.propertyValue === 'object' ? {} : []
-      for (const childName in this.propertyValue) {
-        const childValue = this.propertyValue[childName]
-        const childPropertyPath = this.propertyPathFor(childName)
-        // FIXME this is likely incomplete, especially for enveloped resources,
-        // which also need to be properly handled...  For enveloped resources
-        // the schema and context would need to be retrieved and passed along.
-        const childLDContext =
-          this.jsonLDContext &&
-          typeof this.jsonLDContext === 'object' &&
-          typeof this.jsonLDContext[childName] !== 'undefined'
-            ? this.jsonLDContext[childName]
-            : undefined
-        // For now, assume we're using an SDoc from
-        // https://github.com/hyperjump-io/json-schema-core
-        const childJsonSchema =
-          this.jsonSchema && childName in this.jsonSchema
-            ? this.jsonSchema.properties[childName]
-            : undefined
-        children[childName] = {
-          propertyName: childName,
-          propertyValue: childValue,
-          configMapping: this.configMapping,
-          uiType: this.uiType,
-          propertyPath: childPropertyPath,
-          jsonLDContextURL: this.jsonLDContextURL,
-          jsonSchemaURL: this.jsonSchemaURL,
-          jsonLDContext: childLDContext,
-          jsonSchema: childJsonSchema,
+      const children = {}
+      const propertyValue = await this.getPropertyValue()
+      if (typeof propertyValue === 'object') {
+        const childKeys = await this.getAllChildKeys()
+        for (const idx in childKeys) {
+          const childKey = childKeys[idx]
+          const childValue = propertyValue[childKey]
+          const childPropertyPath = this.propertyPathFor(childKey)
+          // FIXME this is likely incomplete, especially for enveloped resources,
+          // which also need to be properly handled...  For enveloped resources
+          // the schema and context would need to be retrieved and passed along.
+          const childLDContext =
+            this.jsonLDContext &&
+            typeof this.jsonLDContext === 'object' &&
+            typeof this.jsonLDContext[childKey] !== 'undefined'
+              ? this.jsonLDContext[childKey]
+              : undefined
+          // For now, assume we're using an SDoc from
+          // https://github.com/hyperjump-io/json-schema-core
+          const childJsonSchema =
+            this.jsonSchema && childKey in this.jsonSchema
+              ? this.jsonSchema.properties[childKey]
+              : undefined
+          children[childKey] = {
+            propertyName: childKey,
+            propertyValue: childValue,
+            configMapping: this.configMapping,
+            uiType: this.uiType,
+            propertyPath: childPropertyPath,
+            jsonLDContextURL: this.jsonLDContextURL,
+            jsonSchemaURL: this.jsonSchemaURL,
+            jsonLDContext: childLDContext,
+            jsonSchema: childJsonSchema,
+          }
         }
       }
       return children
     },
+    async getAllChildKeys() {
+      // respect and preserve both the schema AND the provided value
+      const fromSchema = await this.getChildKeysFromSchema()
+      const fromPropertyValue = await this.getChildKeysFromPropertyValue()
+      const allKeys = [...new Set([...fromSchema, ...fromPropertyValue])]
+      return allKeys
+    },
+    async getChildKeysFromSchema() {
+      const schema = await this.getJsonSchema()
+      return schema ? Schema.keys(schema) : new Set()
+    },
+    // eslint-disable-next-line require-await
+    async getPropertyValue() {
+      return this.propertyValue
+    },
+    async getChildKeysFromPropertyValue() {
+      const value = await this.getPropertyValue()
+      if (!value || typeof value !== 'object') {
+        return []
+      }
+      if (Array.isArray(value)) {
+        return Array.keys(value)
+      }
+      return new Set(Object.keys(value))
+    },
     getPropertyPath() {
       if (!this.propertyPath) {
-        return ''
+        return '$'
       }
       return this.propertyPath
     },
     propertyPathFor(childName) {
       const parentPath = this.getPropertyPath()
+      let suffix = ''
       switch (typeof childName) {
         case 'string':
-          return parentPath + '.' + childName
+          if (isVarName(childName)) {
+            suffix = '.' + childName
+          } else {
+            suffix = '["' + childName + '"]'
+          }
+          break
         case 'number':
-          return parentPath + '[' + childName + ']'
+          suffix = '[' + childName + ']'
+          break
         default:
           throw new Error(
-            'Unsupported property type: ' + typeof this.propertyValue
+            'Unsupported property type: ' + typeof this.getPropertyValue()
           )
       }
+      return parentPath + suffix
     },
   },
 }

@@ -16,13 +16,14 @@
     "*.{js,vue}": "eslint",
     "*.{css,vue}": "stylelint"
   },
- "dependencies": {
+  "dependencies": {
     "@hyperjump/json-schema-core": "^0.21.1",
     "@nuxt/content": "^1.11.1",
     "@nuxtjs/axios": "^5.12.5",
     "@nuxtjs/pwa": "^3.3.5",
     "@openteamsinc/caching-client": "^0.1.6",
     "core-js": "^3.8.3",
+    "is-var-name": "^2.0.0",
     "nuxt": "^2.14.12"
   },
   "devDependencies": {

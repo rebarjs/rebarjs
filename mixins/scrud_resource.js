@@ -40,6 +40,7 @@ export default {
       $_jsonSchema: undefined,
       $_jsonLDContext: undefined,
       $_resourceOptions: undefined,
+      children: undefined,
     }
   },
   async fetch() {
@@ -50,8 +51,10 @@ export default {
         )
       }
       await this.getResource()
+    } else {
+      this.$_propertyValue = this.propertyValue
     }
-    if (!this.resourceOptions) {
+    if (this.resourceOptions === undefined) {
       await this.getResourceOptions()
     }
     if (this.jsonSchema === undefined) {
@@ -60,6 +63,7 @@ export default {
     if (this.jsonLDContext === undefined) {
       await this.getJsonLDContext()
     }
+    this.children = this.getChildren()
   },
   methods: {
     async getResource() {
@@ -160,25 +164,6 @@ export default {
       }
       return this.$_jsonLDContextURL
     },
-    async getJsonLDContext() {
-      if (this.$_jsonLDContext === undefined) {
-        if (this.jsonLDContext) {
-          this.$_jsonLDContext = this.jsonLDContext
-        } else {
-          const jsonLDContextURL = await this.getJsonLDContextURL()
-          if (jsonLDContextURL) {
-            this.$_jsonLDContext = await this.$cachingClient.options(
-              this.convertToHttps(this.scrudResourceURL),
-              { json: true }
-            )
-          }
-        }
-        this.$_jsonLDContext = this.$_jsonLDContext
-          ? this.$_jsonLDContext
-          : null
-      }
-      return this.jsonLDContext
-    },
     getPostSchemaURLFrom(data) {
       return data.requestBody.content['application/json'].schema
     },
@@ -197,6 +182,9 @@ export default {
         to.protocol = 'https'
         return to.toString()
       }
+    },
+    getPropertyValue() {
+      return this.$_propertyValue
     },
   },
 }

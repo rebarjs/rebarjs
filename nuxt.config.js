@@ -59,4 +59,9 @@ export default {
     addons: ['@storybook/addon-controls', '@storybook/addon-notes'],
     stories: ['~/**/*.stories.js'],
   },
+  vue: {
+    config: {
+      devtools: true,
+    },
+  },
 }
