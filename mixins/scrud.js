@@ -105,9 +105,8 @@ export default {
         // construct the type keys to use in fallback matching for the component to use
         // from the configMapping
         const jsonLDType = this.resolveJsonLDContextURL()
-        const jsonSchemaType = (await this.getJsonSchema())
-          ? Schema.uri(this.jsonSchema)
-          : undefined
+        const jsonSchema = await this.getJsonSchema()
+        const jsonSchemaType = jsonSchema ? Schema.uri(jsonSchema) : undefined
         const jsonType = typeof (await this.getPropertyValue())
         const keys = [jsonLDType, jsonSchemaType, jsonType]
         this.$_typeKeys = []
@@ -146,9 +145,7 @@ export default {
         } else {
           const jsonSchemaURL = await this.getJsonSchemaURL()
           if (jsonSchemaURL) {
-            if (jsonSchemaURL) {
-              this.$_jsonSchema = await Schema.get(this.jsonSchemaURL)
-            }
+            this.$_jsonSchema = await Schema.get(jsonSchemaURL)
           }
         }
         this.$_jsonSchema = this.$_jsonSchema || null

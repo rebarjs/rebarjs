@@ -52,10 +52,11 @@ NoContextNoSchema.args = {
   uiType: 'get',
 }
 
+const scrudValueURL = 'http://scrudful.org/json-schema/storybook/ScrudValue'
 Schema.add(
   {
     $schema: 'https://json-schema.org/draft/2019-09/schema',
-    $id: 'http://scrudful.org/json-schema/storybook/ScrudValue',
+    $id: scrudValueURL,
     type: 'object',
     properties: {
       data: {
@@ -68,18 +69,13 @@ Schema.add(
       },
     },
   },
-  'http://scrudful.org/json-schema/storybooks/ScrudValue'
+  scrudValueURL
 )
-// export const NoContext = Template.bind({})(async () => {
-//   // const dataSchema = await Schema.get("http://scrudful.org/json-schema/storybook/ScrudValue#/definitions/data")
-//   console.log(2)
-//   // console.log(dataSchema)
-//   NoContext.args = {
-//     propertyName: 'data',
-//     propertyValue: 'Hi, SCRUD',
-//     configMapping: configMapping,
-//     uiType: 'get',
-//     // jsonSchemaURL: Schema.uri(dataSchema),
-//     // jsonSchema: dataSchema,
-//   }
-// })()
+export const NoContext = Template.bind({})
+NoContext.args = {
+  propertyName: 'data',
+  propertyValue: 'Hi, SCRUD',
+  configMapping,
+  uiType: 'get',
+  jsonSchemaURL: scrudValueURL,
+}
