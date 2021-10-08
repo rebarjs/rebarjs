@@ -1,7 +1,7 @@
 <template>
   <button class="button is-primary" @click="onClick">
     <!-- @slot default inner button content -->
-    <slot></slot>
+    <slot></slot><span v-if="value">{{ value }}</span>
   </button>
 </template>
 
@@ -9,6 +9,12 @@
 export default {
   // eslint-disable-next-line vue/component-definition-name-casing
   name: 'my-button',
+  props: {
+    // eslint-disable-next-line vue/require-default-prop
+    value: {
+      required: false,
+    },
+  },
 
   methods: {
     onClick() {

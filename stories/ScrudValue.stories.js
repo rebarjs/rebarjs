@@ -1,7 +1,8 @@
 import { Schema } from '@hyperjump/json-schema-core'
-import SimpleContent from '~/stories/components/SimpleContent.vue'
-import String from '~/stories/components/String.vue'
-import ScrudValue from '~/components/ScrudValue.vue'
+import SimpleContent from '~/stories/components/SimpleContent'
+import String from '~/stories/components/String'
+import MyButton from '~/stories/components/MyButton'
+import ScrudValue from '~/components/ScrudValue'
 import { configMap } from '~/utils/configMapping'
 
 export default {
@@ -16,11 +17,9 @@ const Template = (args, { argTypes }) => ({
 })
 
 const configMappingOnlyDefault = configMap({
-  components: {
-    __default__: {
-      input: SimpleContent,
-      render: SimpleContent,
-    },
+  __default__: {
+    input: SimpleContent,
+    render: SimpleContent,
   },
 })
 
@@ -34,11 +33,9 @@ NoContextNoSchemaUseDefault.args = {
 
 const configMapping = configMap(
   {
-    components: {
-      string: {
-        input: String,
-        render: String,
-      },
+    string: {
+      input: String,
+      render: String,
     },
   },
   configMappingOnlyDefault
@@ -53,18 +50,38 @@ NoContextNoSchema.args = {
 }
 
 const scrudValueURL = 'http://scrudful.org/json-schema/storybook/ScrudValue'
+const scrudValueURLRoot = scrudValueURL + '#'
+const configWithJsonSchemaMappings = configMap({}, configMapping)
+// configWithJsonSchemaMappings[scrudValueURL + '#'] = {
+configWithJsonSchemaMappings[scrudValueURLRoot] = {
+  input: MyButton,
+  render: MyButton,
+}
+
 Schema.add(
   {
     $schema: 'https://json-schema.org/draft/2019-09/schema',
     $id: scrudValueURL,
     type: 'object',
     properties: {
-      data: {
-        $ref: '#/definitions/Data',
+      renderAsButton: {
+        $ref: '#/definitions/RenderAsButton',
+      },
+      renderAsEmString: {
+        $ref: '#/definitions/RenderAsEmString',
+      },
+      renderAsPlainString: {
+        $ref: '#definitinos/RenderAsPlainString',
       },
     },
     definitions: {
-      Data: {
+      RenderAsButton: {
+        type: 'string',
+      },
+      RenderAsEmString: {
+        type: 'string',
+      },
+      RenderAsPlainString: {
         type: 'string',
       },
     },
@@ -75,7 +92,7 @@ export const NoContext = Template.bind({})
 NoContext.args = {
   propertyName: 'data',
   propertyValue: 'Hi, SCRUD',
-  configMapping,
+  configMapping: configWithJsonSchemaMappings,
   uiType: 'get',
   jsonSchemaURL: scrudValueURL,
 }

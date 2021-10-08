@@ -9,6 +9,7 @@ export const baseConfigMap = {
 
 export const configMap = (mapping, parentMapping) => {
   const result = { ...mapping }
-  result.prototype = parentMapping || baseConfigMap
+  const baseMapping = parentMapping || baseConfigMap
+  Object.setPrototypeOf(result, baseMapping)
   return result
 }

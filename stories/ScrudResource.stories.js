@@ -15,11 +15,9 @@ const Template = (args, { argTypes }) => ({
 })
 
 const configMappingOnlyDefault = configMap({
-  components: {
-    __default__: {
-      input: SimpleContent,
-      render: SimpleContent,
-    },
+  __default__: {
+    input: SimpleContent,
+    render: SimpleContent,
   },
 })
 
@@ -35,11 +33,9 @@ NoContextNoSchemaUseDefault.args = {
 
 const configMappingWithString = configMap(
   {
-    components: {
-      string: {
-        input: String,
-        render: String,
-      },
+    string: {
+      input: String,
+      render: String,
     },
   },
   configMappingOnlyDefault

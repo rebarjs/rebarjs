@@ -85,7 +85,7 @@ export default {
       return component
     },
     getComponentFor(key) {
-      const match = this.configMapping.components[key]
+      const match = this.configMapping[key]
       if (match) {
         switch (this.uiType) {
           case 'post':
