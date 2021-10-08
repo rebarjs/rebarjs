@@ -1,3 +1,5 @@
+import { Schema } from '@hyperjump/json-schema-core'
+import MyButton from '~/stories/components/MyButton'
 import SimpleContent from '~/stories/components/SimpleContent'
 import String from '~/stories/components/String'
 import ScrudComposite from '~/components/ScrudComposite'
@@ -51,4 +53,63 @@ NoContextNoSchema.args = {
   },
   configMapping,
   uiType: 'get',
+}
+
+const scrudCompositeURL =
+  'http://scrudful.org/json-schema/storybook/ScrudComposite'
+const schemaGreetingURL = '#/definitions/Greeting'
+const schemaResponseURL = '#/definitions/Response'
+const schemaSomeNumberURL = '#/definitions/SomeNumber'
+
+const configWithJsonSchemaMappings = configMap({}, configMapping)
+configWithJsonSchemaMappings[scrudCompositeURL + schemaGreetingURL] = {
+  render: MyButton,
+  input: MyButton,
+}
+
+Schema.add(
+  {
+    $schema: 'https://json-schema.org/draft/2019-09/schema',
+    $id: scrudCompositeURL,
+    type: 'object',
+    properties: {
+      greeting: {
+        $ref: schemaGreetingURL,
+      },
+      response: {
+        $ref: schemaResponseURL,
+      },
+      someNumber: {
+        $ref: schemaSomeNumberURL,
+      },
+    },
+    definitions: {
+      Greeting: {
+        type: 'string',
+      },
+      Response: {
+        type: 'string',
+      },
+      SomeNumber: {
+        type: 'number',
+      },
+    },
+  },
+  scrudCompositeURL
+)
+
+export const NoContext = Template.bind({})
+NoContext.args = {
+  propertyName: 'data',
+  propertyValue: {
+    // renders based on JSON Schema Pointer for type
+    greeting: 'I should be a button',
+    // renders based on JSON typeof
+    response: 'I should be italics',
+    // renders __default__
+    someNumber: 42,
+  },
+  configMapping: configWithJsonSchemaMappings,
+  uiType: 'get',
+  jsonSchemaURL: scrudCompositeURL,
 }

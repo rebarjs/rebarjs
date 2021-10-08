@@ -54,16 +54,21 @@ export default {
     } else {
       this.$_propertyValue = this.propertyValue
     }
-    if (this.resourceOptions === undefined) {
+    if (this.$_resourceOptions === undefined) {
       await this.getResourceOptions()
     }
-    if (this.jsonSchema === undefined) {
+    if (this.$_jsonSchema === undefined) {
       await this.getJsonSchema()
     }
-    if (this.jsonLDContext === undefined) {
+    if (this.$_jsonLDContext === undefined) {
       await this.getJsonLDContext()
     }
-    this.children = this.getChildren()
+    if (this.children === undefined) {
+      this.children = await this.getChildren()
+    }
+    if (this.as === undefined) {
+      this.as = await this.getComponent()
+    }
   },
   methods: {
     async getResource() {

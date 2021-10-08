@@ -181,6 +181,7 @@ export default {
           const childKey = childKeys[idx]
           const childValue = propertyValue[childKey]
           const childPropertyPath = this.propertyPathFor(childKey)
+          const jsonLDContextURL = await this.getJsonLDContextURL()
           // FIXME this is likely incomplete, especially for enveloped resources,
           // which also need to be properly handled...  For enveloped resources
           // the schema and context would need to be retrieved and passed along.
@@ -192,18 +193,35 @@ export default {
               : undefined
           // For now, assume we're using an SDoc from
           // https://github.com/hyperjump-io/json-schema-core
-          const childJsonSchema =
-            this.jsonSchema && childKey in this.jsonSchema
-              ? this.jsonSchema.properties[childKey]
-              : undefined
+          const jsonSchema = await this.getJsonSchema()
+          const jsonSchemaProperties = jsonSchema
+            ? await Schema.step('properties', jsonSchema)
+            : undefined
+          let childJsonSchema = jsonSchemaProperties
+            ? await Schema.step(childKey, jsonSchemaProperties)
+            : undefined
+          if (childJsonSchema) {
+            const hasRef = await Schema.has('$ref', childJsonSchema)
+            if (hasRef) {
+              const ref = Schema.step('$ref', childJsonSchema)
+              if (ref) {
+                const refValue = Schema.value(ref)
+                childJsonSchema = await Schema.get(refValue, childJsonSchema)
+              }
+            }
+          }
+          const childJsonSchemaURL = childJsonSchema
+            ? Schema.uri(childJsonSchema)
+            : undefined
           children[childKey] = {
             propertyName: childKey,
             propertyValue: childValue,
             configMapping: this.configMapping,
             uiType: this.uiType,
             propertyPath: childPropertyPath,
-            jsonLDContextURL: this.jsonLDContextURL,
-            jsonSchemaURL: this.jsonSchemaURL,
+            // eslint-disable-next-line object-shorthand
+            jsonLDContextURL: jsonLDContextURL,
+            jsonSchemaURL: childJsonSchemaURL,
             jsonLDContext: childLDContext,
             jsonSchema: childJsonSchema,
           }
@@ -220,7 +238,15 @@ export default {
     },
     async getChildKeysFromSchema() {
       const schema = await this.getJsonSchema()
-      return schema ? Schema.keys(schema) : new Set()
+      if (!schema) {
+        return new Set()
+      }
+      const properties = await Schema.step('properties', schema)
+      if (!properties) {
+        return new Set()
+      }
+      const keys = await Schema.keys(properties)
+      return keys
     },
     // eslint-disable-next-line require-await
     async getPropertyValue() {
