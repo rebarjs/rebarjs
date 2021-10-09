@@ -13,7 +13,8 @@ export default {
 const Template = (args, { argTypes }) => ({
   components: { ScrudValue },
   props: [...Object.keys(argTypes), 'content'],
-  template: '<ScrudValue v-bind="$props">{{ content }}</ScrudValue>',
+  template:
+    '<ScrudValue v-model="$props.propertyValue" v-bind="$props">{{ content }}</ScrudValue>',
 })
 
 const configMappingOnlyDefault = configMap({

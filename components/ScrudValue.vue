@@ -1,7 +1,7 @@
 <template>
   <div>
     <label v-if="label" :for="propertyName">{{ label }}</label>
-    <component :is="as" v-model="propertyValue" v-bind="componentProps">
+    <component :is="as" v-model="value" v-bind="componentProps">
       <slot></slot>
     </component>
   </div>

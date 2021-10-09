@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-for="(child, propertyName) in children" :key="propertyName">
-      <scrud-value v-bind="child" />
+      <scrud-value v-model="value[propertyName]" v-bind="child" />
     </div>
   </div>
 </template>

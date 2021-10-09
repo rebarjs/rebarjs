@@ -3,11 +3,8 @@ import isVarName from 'is-var-name'
 
 export default {
   props: {
-    propertyName: {
-      type: String,
-      required: true,
-    },
-    propertyValue: {
+    value: {
+      type: undefined,
       required: true,
     },
     configMapping: {
@@ -179,7 +176,6 @@ export default {
         const childKeys = await this.getAllChildKeys()
         for (const idx in childKeys) {
           const childKey = childKeys[idx]
-          const childValue = propertyValue[childKey]
           const childPropertyPath = this.propertyPathFor(childKey)
           const jsonLDContextURL = await this.getJsonLDContextURL()
           // FIXME this is likely incomplete, especially for enveloped resources,
@@ -214,8 +210,7 @@ export default {
             ? Schema.uri(childJsonSchema)
             : undefined
           children[childKey] = {
-            propertyName: childKey,
-            propertyValue: childValue,
+            value: propertyValue,
             configMapping: this.configMapping,
             uiType: this.uiType,
             propertyPath: childPropertyPath,
@@ -250,7 +245,7 @@ export default {
     },
     // eslint-disable-next-line require-await
     async getPropertyValue() {
-      return this.propertyValue
+      return this.value
     },
     async getChildKeysFromPropertyValue() {
       const value = await this.getPropertyValue()
@@ -263,9 +258,6 @@ export default {
       return new Set(Object.keys(value))
     },
     getPropertyPath() {
-      if (!this.propertyPath) {
-        return '$'
-      }
       return this.propertyPath
     },
     propertyPathFor(childName) {
