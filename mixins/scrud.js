@@ -105,7 +105,14 @@ export default {
         const jsonSchema = await this.getJsonSchema()
         const jsonSchemaType = jsonSchema ? Schema.uri(jsonSchema) : undefined
         const jsonType = typeof (await this.getPropertyValue())
-        const keys = [jsonLDType, jsonSchemaType, jsonType]
+        const jsonSchemaFormatSchema =
+          jsonSchemaType && jsonSchemaType === 'string'
+            ? await Schema.step('format')
+            : undefined
+        const jsonSchemaFormat = jsonSchemaFormatSchema
+          ? Schema.value(jsonSchemaFormatSchema)
+          : undefined
+        const keys = [jsonLDType, jsonSchemaType, jsonSchemaFormat, jsonType]
         this.$_typeKeys = []
         for (const typeKey in keys) {
           if (keys[typeKey]) {
