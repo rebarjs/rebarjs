@@ -61,7 +61,17 @@ export default {
       this.children = await this.getChildren()
     }
     if (this.as === undefined) {
-      this.as = await this.getComponent()
+      const component = await this.getComponent()
+      if (Array.isArray(component)) {
+        this.as = component[0]
+        this.props = {
+          ...component[1],
+          // received props take priority and overwrite
+          ...this.props,
+        }
+      } else {
+        this.as = component
+      }
     }
   },
 

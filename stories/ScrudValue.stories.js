@@ -35,8 +35,9 @@ NoContextNoSchemaUseDefault.args = {
 const configMapping = configMap(
   {
     string: {
-      input: String,
-      render: String,
+      // prove that the array mapping works, use empty default props
+      input: [String, {}],
+      render: [String, {}],
     },
   },
   configMappingOnlyDefault
