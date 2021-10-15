@@ -1,6 +1,6 @@
 import { Schema } from '@hyperjump/json-schema-core'
 import MyButton from '~/stories/components/MyButton'
-import SimpleContent from '~/stories/components/SimpleContent'
+import SimpleContent from '~/components/SimpleContent'
 import String from '~/stories/components/String'
 import ScrudComposite from '~/components/ScrudComposite'
 import { configMap } from '~/utils/configMapping'

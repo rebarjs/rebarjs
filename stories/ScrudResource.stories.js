@@ -1,4 +1,4 @@
-import SimpleContent from '~/stories/components/SimpleContent.vue'
+import SimpleContent from '~/components/SimpleContent.vue'
 import String from '~/stories/components/String.vue'
 import ScrudResource from '~/components/ScrudResource.vue'
 import { configMap } from '~/utils/configMapping'

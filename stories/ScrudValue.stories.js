@@ -1,5 +1,5 @@
 import { Schema } from '@hyperjump/json-schema-core'
-import SimpleContent from '~/stories/components/SimpleContent'
+import SimpleContent from '~/components/SimpleContent'
 import String from '~/stories/components/String'
 import MyButton from '~/stories/components/MyButton'
 import ScrudValue from '~/components/ScrudValue'

@@ -1,5 +1,5 @@
 import MyButton from '~/stories/components/MyButton.vue'
-import SimpleContent from '~/stories/components/SimpleContent.vue'
+import SimpleContent from '~/components/SimpleContent.vue'
 import SSRFormGen from '~/components/SSRFormGen.vue'
 
 export default {
