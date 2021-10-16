@@ -2,7 +2,7 @@
   <div>
     <label v-if="label" :for="propertyName">{{ label }}</label>
     <component :is="as" v-model="value" v-bind="componentProps">
-      <slot></slot>
+      <slot v-for="item in componentSlots">{{ item }}</slot>
     </component>
   </div>
 </template>

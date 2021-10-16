@@ -39,18 +39,63 @@ export default {
   },
 
   data() {
-    const id = this.propertyPath === '$' ? this.propertyName : this.propertyPath
     return {
-      as: undefined,
+      componentMatch: undefined,
       label: undefined,
-      componentProps: {
-        id,
-      },
       children: undefined,
       $_jsonSchema: undefined,
       $_jsonLDContext: undefined,
       $_typeKeys: undefined,
     }
+  },
+
+  computed: {
+    as() {
+      if (Array.isArray(this.componentMatch)) {
+        return this.componentMatch[0]
+      }
+      return this.componentMatch
+    },
+    mappingProps() {
+      if (Array.isArray(this.componentMatch)) {
+        return this.componentMatch[1]
+      }
+      return {}
+    },
+    componentProps() {
+      const id =
+        this.propertyPath === '$' ? this.propertyName : this.propertyPath
+      const resultProps = { id }
+      if ('__props__' in this.mappingProps) {
+        // map properties of this component to props of the target component
+        const dunderProps = this.mappingProps.__props__
+        for (const targetKey in dunderProps) {
+          const sourceKey = dunderProps[targetKey]
+          if (sourceKey instanceof Function) {
+            resultProps[targetKey] = sourceKey(this)
+          } else {
+            resultProps[targetKey] = this[sourceKey]
+          }
+        }
+      }
+      return { ...resultProps }
+    },
+    componentSlots() {
+      const resultSlots = []
+      if ('__slots__' in this.mappingProps) {
+        // map properties of this component to slots of the target component
+        const mappingSlots = this.mappingProps.__slots__
+        for (const idx in mappingSlots) {
+          const slotSource = mappingSlots[idx]
+          if (slotSource instanceof Function) {
+            resultSlots.push(slotSource(this))
+          } else {
+            resultSlots.push(this[slotSource])
+          }
+        }
+      }
+      return resultSlots
+    },
   },
 
   async fetch() {
@@ -60,18 +105,8 @@ export default {
     if (this.children === undefined) {
       this.children = await this.getChildren()
     }
-    if (this.as === undefined) {
-      const component = await this.getComponent()
-      if (Array.isArray(component)) {
-        this.as = component[0]
-        this.props = {
-          ...component[1],
-          // received props take priority and overwrite
-          ...this.props,
-        }
-      } else {
-        this.as = component
-      }
+    if (this.componentMatch === undefined) {
+      this.componentMatch = await this.getComponent()
     }
   },
 
@@ -113,16 +148,25 @@ export default {
         // from the configMapping
         const jsonLDType = this.resolveJsonLDContextURL()
         const jsonSchema = await this.getJsonSchema()
-        const jsonSchemaType = jsonSchema ? Schema.uri(jsonSchema) : undefined
+        const jsonSchemaType = jsonSchema
+          ? await this.resolveJsonSchemaType(jsonSchema)
+          : undefined
+        const jsonSchemaURI = jsonSchema ? Schema.uri(jsonSchema) : undefined
         const jsonType = typeof (await this.getPropertyValue())
         const jsonSchemaFormatSchema =
           jsonSchemaType && jsonSchemaType === 'string'
-            ? await Schema.step('format')
+            ? await Schema.step('format', jsonSchema)
             : undefined
         const jsonSchemaFormat = jsonSchemaFormatSchema
           ? Schema.value(jsonSchemaFormatSchema)
           : undefined
-        const keys = [jsonLDType, jsonSchemaType, jsonSchemaFormat, jsonType]
+        const keys = [
+          jsonLDType,
+          jsonSchemaFormat,
+          jsonSchemaURI,
+          jsonSchemaType,
+          jsonType,
+        ]
         this.$_typeKeys = []
         for (const typeKey in keys) {
           if (keys[typeKey]) {
@@ -131,6 +175,14 @@ export default {
         }
       }
       return this.$_typeKeys
+    },
+    async resolveJsonSchemaType(jsonSchema) {
+      const hasType = await Schema.has('type', jsonSchema)
+      if (hasType) {
+        const typeValue = await Schema.step('type', jsonSchema)
+        return Schema.value(typeValue)
+      }
+      return Schema.uri(jsonSchema)
     },
     resolveJsonLDContextURL() {
       if (this.jsonLDContext) {

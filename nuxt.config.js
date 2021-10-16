@@ -38,6 +38,7 @@ export default {
     '@nuxtjs/pwa',
     // https://go.nuxtjs.dev/content
     '@nuxt/content',
+    'bootstrap-vue/nuxt',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -57,7 +58,7 @@ export default {
   build: {},
   storybook: {
     addons: ['@storybook/addon-controls', '@storybook/addon-notes'],
-    stories: ['~/**/*.stories.js'],
+    stories: ['~/**/*.stories.js', '~/stories/**/*.stories.js'],
   },
   vue: {
     config: {
