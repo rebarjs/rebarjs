@@ -108,9 +108,23 @@ export default {
     if (this.componentMatch === undefined) {
       this.componentMatch = await this.getComponent()
     }
+    if (this.label === undefined) {
+      this.label = await this.getLabel()
+    }
   },
 
   methods: {
+    async getLabel() {
+      const jsonSchema = await this.getJsonSchema()
+      const hasTitle = jsonSchema
+        ? await Schema.has('title', jsonSchema)
+        : undefined
+      const titleSchema = hasTitle
+        ? await Schema.step('title', jsonSchema)
+        : undefined
+      const title = titleSchema ? Schema.value(titleSchema) : undefined
+      return title
+    },
     async getComponent() {
       const typeKeys = await this.getTypeKeys()
       let component

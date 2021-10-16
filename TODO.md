@@ -2,15 +2,10 @@
 
 ## Core
 
+* Adopt schema-to-yup to generate yup validators
 * Add support for `__form__` mapping to define the form component for input
-* Make `SimpleContent` a core component and use it as the `__default__`
 * Make a `SimpleForm` core component and use it as the `__form__` default
   * though, could I just use `form`??
-* Add support for `string` and `object` component mapping
-  * `string` would be the markup alias, this may work out of the box
-  * `object` would have an `as` property for the component to map to and `props` to pass
-    along to the component.
-
 
 ## Storybooks
 

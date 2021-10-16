@@ -24,25 +24,31 @@ Schema.add(
     properties: {
       aString: {
         type: 'string',
+        title: 'A String',
       },
       aNumber: {
         type: 'number',
+        title: 'A Number',
       },
       aTime: {
         type: 'string',
         format: 'time',
+        title: 'A Time',
       },
       aDate: {
         type: 'string',
         format: 'date',
+        title: 'A Date',
       },
       anEmail: {
         type: 'string',
         format: 'email',
+        title: 'An Email',
       },
       aLink: {
         type: 'string',
         format: 'uri',
+        title: 'A Link',
       },
     },
     definitions: {},
