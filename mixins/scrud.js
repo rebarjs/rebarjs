@@ -39,7 +39,7 @@ export default {
     required: {
       type: Boolean,
       required: false,
-    }
+    },
   },
 
   data() {
@@ -137,12 +137,7 @@ export default {
   methods: {
     async getLabel() {
       const jsonSchema = await this.getJsonSchema()
-      const hasTitle = jsonSchema
-        ? await Schema.has('title', jsonSchema)
-        : undefined
-      const titleSchema = hasTitle
-        ? await Schema.step('title', jsonSchema)
-        : undefined
+      const titleSchema = await this.getSchemaProperty('title', jsonSchema)
       const title = titleSchema ? Schema.value(titleSchema) : undefined
       return title
     },
@@ -190,7 +185,7 @@ export default {
         const jsonType = typeof (await this.getPropertyValue())
         const jsonSchemaFormatSchema =
           jsonSchemaType && jsonSchemaType === 'string'
-            ? await Schema.step('format', jsonSchema)
+            ? await this.getSchemaProperty('format', jsonSchema)
             : undefined
         const jsonSchemaFormat = jsonSchemaFormatSchema
           ? Schema.value(jsonSchemaFormatSchema)
@@ -212,12 +207,10 @@ export default {
       return this.$_typeKeys
     },
     async resolveJsonSchemaType(jsonSchema) {
-      const hasType = await Schema.has('type', jsonSchema)
-      if (hasType) {
-        const typeValue = await Schema.step('type', jsonSchema)
-        return Schema.value(typeValue)
-      }
-      return Schema.uri(jsonSchema)
+      const typeValueSchema = await this.getSchemaProperty('type', jsonSchema)
+      return typeValueSchema
+        ? Schema.value(typeValueSchema)
+        : Schema.uri(jsonSchema)
     },
     resolveJsonLDContextURL() {
       if (this.jsonLDContext) {
@@ -272,6 +265,12 @@ export default {
       }
       return this.jsonLDContext
     },
+    async getSchemaProperty(property, schema) {
+      const hasProperty = schema
+        ? await Schema.has(property, schema)
+        : undefined
+      return hasProperty ? await Schema.step(property, schema) : undefined
+    },
     async getChildren() {
       // TODO Need to build the children based on the JSON Schema if available!
       const children = {}
@@ -279,15 +278,17 @@ export default {
       if (typeof propertyValue === 'object') {
         const jsonSchema = await this.getJsonSchema()
         const childKeys = await this.getAllChildKeys()
-        const hasRequired = jsonSchema
-          ? await Schema.has('required', jsonSchema)
-          : undefined
-        const requiredSchema = hasRequired
-          ? await Schema.step('required', jsonSchema)
-          : undefined
+        const requiredSchema = await this.getSchemaProperty(
+          'required',
+          jsonSchema
+        )
         const requiredChildren = requiredSchema
           ? new Set(Schema.value(requiredSchema))
           : new Set([])
+        const jsonSchemaProperties = await this.getSchemaProperty(
+          'properties',
+          jsonSchema
+        )
         for (const idx in childKeys) {
           const childKey = childKeys[idx]
           const childPropertyPath = this.propertyPathFor(childKey)
@@ -301,22 +302,15 @@ export default {
             typeof this.jsonLDContext[childKey] !== 'undefined'
               ? this.jsonLDContext[childKey]
               : undefined
-          // For now, assume we're using an SDoc from
-          // https://github.com/hyperjump-io/json-schema-core
-          const jsonSchemaProperties = jsonSchema
-            ? await Schema.step('properties', jsonSchema)
-            : undefined
-          let childJsonSchema = jsonSchemaProperties
-            ? await Schema.step(childKey, jsonSchemaProperties)
-            : undefined
+          let childJsonSchema = await this.getSchemaProperty(
+            childKey,
+            jsonSchemaProperties
+          )
           if (childJsonSchema) {
-            const hasRef = await Schema.has('$ref', childJsonSchema)
-            if (hasRef) {
-              const ref = Schema.step('$ref', childJsonSchema)
-              if (ref) {
-                const refValue = Schema.value(ref)
-                childJsonSchema = await Schema.get(refValue, childJsonSchema)
-              }
+            const ref = await this.getSchemaProperty('$ref', childJsonSchema)
+            if (ref) {
+              const refValue = Schema.value(ref)
+              childJsonSchema = await Schema.get(refValue, childJsonSchema)
             }
           }
           const childJsonSchemaURL = childJsonSchema
