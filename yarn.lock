@@ -3961,11 +3961,6 @@
   optionalDependencies:
     prettier "^1.18.2"
 
-"@vue/devtools-api@^6.0.0-beta.15":
-  version "6.0.0-beta.19"
-  resolved "https://registry.yarnpkg.com/@vue/devtools-api/-/devtools-api-6.0.0-beta.19.tgz#f8e88059daa424515992426a0c7ea5cde07e99bf"
-  integrity sha512-ObzQhgkoVeoyKv+e8+tB/jQBL2smtk/NmC9OmFK8UqdDpoOdv/Kf9pyDWL+IFyM7qLD2C75rszJujvGSPSpGlw==
-
 "@vue/ref-transform@3.2.19":
   version "3.2.19"
   resolved "https://registry.yarnpkg.com/@vue/ref-transform/-/ref-transform-3.2.19.tgz#cf0f986486bb26838fbd09749e927bab19745600"
@@ -16372,12 +16367,10 @@ vary@^1.1.2, vary@~1.1.2:
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
 
-vee-validate@^4.5.2:
-  version "4.5.2"
-  resolved "https://registry.yarnpkg.com/vee-validate/-/vee-validate-4.5.2.tgz#5da2fdef14ee272271001eab91078d0fbe7ea25d"
-  integrity sha512-QbIbasQyl+YhKPJUrLetDfpfQ9Y1SNIkvly/RS/jlZENtfiVd7pt5szYQu/DLkczBclsO6Dn3ejNqfGY9G+UBg==
-  dependencies:
-    "@vue/devtools-api" "^6.0.0-beta.15"
+vee-validate@^3.4.13:
+  version "3.4.13"
+  resolved "https://registry.yarnpkg.com/vee-validate/-/vee-validate-3.4.13.tgz#886ffe90778edde9c2f0c3ad94bfab3fe8079f31"
+  integrity sha512-ONnyRixpd0/JOGLuN8dlxFwLoT5FGq5ti1w4rx/zFZWaJZ1EefhfAbXkQvLwLhjU6izkfHyITXojW/7InOU3Tw==
 
 vendors@^1.0.0:
   version "1.0.4"

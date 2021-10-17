@@ -1,16 +1,30 @@
 import { Schema } from '@hyperjump/json-schema-core'
 import { bootstrapConfigMap } from './configMap'
-import SimpleContent from '~/components/SimpleContent'
 
 export default {
   title: 'Bootstrap Vue Examples',
 }
 
-const Template = (args, { argTypes }) => ({
-  components: { SimpleContent },
+const DisplayTemplate = (args, { argTypes }) => ({
   props: [...Object.keys(argTypes)],
   template:
     '<ScrudComposite v-model="$props.propertyValue" v-bind="$props"></ScrudComposite>',
+})
+
+const FormTemplate = (args, { argTypes }) => ({
+  props: [...Object.keys(argTypes)],
+  methods: {
+    onSubmit(event) {
+      event.preventDefault()
+      alert(JSON.stringify(this.propertyValue))
+    },
+  },
+  template: `
+    <b-form @submit="onSubmit">
+      <ScrudComposite v-model="$props.propertyValue" v-bind="$props"></ScrudComposite>
+      <b-button type="submit" variant="primary">Submit</b-button>
+    </b-form>
+    `,
 })
 
 const firstExampleSchemaURL =
@@ -25,6 +39,7 @@ Schema.add(
       aString: {
         type: 'string',
         title: 'A String',
+        required: true,
       },
       aNumber: {
         type: 'number',
@@ -56,7 +71,7 @@ Schema.add(
   firstExampleSchemaURL
 )
 
-export const FirstRenderExample = Template.bind({})
+export const FirstRenderExample = DisplayTemplate.bind({})
 FirstRenderExample.args = {
   propertyName: 'data',
   propertyValue: {
@@ -72,10 +87,17 @@ FirstRenderExample.args = {
   jsonSchemaURL: firstExampleSchemaURL,
 }
 
-export const FirstInputExample = Template.bind({})
+export const FirstInputExample = FormTemplate.bind({})
 FirstInputExample.args = {
   propertyName: 'data',
-  propertyValue: {},
+  propertyValue: {
+    aString: 'Some String Value',
+    aNumber: undefined,
+    aTime: undefined,
+    aDate: undefined,
+    anEmail: undefined,
+    aLink: undefined,
+  },
   configMapping: bootstrapConfigMap,
   uiType: 'post',
   jsonSchemaURL: firstExampleSchemaURL,

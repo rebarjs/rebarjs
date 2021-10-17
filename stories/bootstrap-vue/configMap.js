@@ -1,8 +1,14 @@
+import FormValue from './components/FormValue'
+import ScrudValue from '~/components/ScrudValue'
 import SimpleContent from '~/components/SimpleContent'
 import { configMap } from '~/utils/configMapping'
 
 export const bootstrapConfigMap = configMap({
   __form__: 'b-form',
+  __value__: {
+    render: ScrudValue,
+    input: FormValue,
+  },
   string: {
     render: SimpleContent,
     input: ['b-form-input', { type: 'text' }],
@@ -36,7 +42,7 @@ export const bootstrapConfigMap = configMap({
         __slots__: ['value'],
       },
     ],
-    input: ['b-form-input', { type: 'email' }],
+    input: ['b-form-input', { type: 'email', rules: 'email' }],
   },
   uri: {
     render: [

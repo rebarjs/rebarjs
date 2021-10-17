@@ -55,7 +55,9 @@ export default {
   content: {},
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    transpile: ['vee-validate/dist/rules'],
+  },
   storybook: {
     addons: ['@storybook/addon-controls', '@storybook/addon-notes'],
     stories: ['~/**/*.stories.js', '~/stories/**/*.stories.js'],

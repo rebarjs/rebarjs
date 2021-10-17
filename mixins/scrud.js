@@ -78,7 +78,7 @@ export default {
           }
         }
       }
-      return { ...resultProps }
+      return { ...this.mappingProps, ...resultProps, ...this.props }
     },
     componentSlots() {
       const resultSlots = []
@@ -96,6 +96,14 @@ export default {
       }
       return resultSlots
     },
+    localValue: {
+      get() {
+        return this.value
+      },
+      set(localValue) {
+        this.$emit('input', localValue)
+      },
+    },
   },
 
   async fetch() {
@@ -111,6 +119,15 @@ export default {
     if (this.label === undefined) {
       this.label = await this.getLabel()
     }
+  },
+
+  watch: {
+    localValue: {
+      handler(newVal) {
+        this.$emit('input', newVal)
+      },
+      deep: true,
+    },
   },
 
   methods: {
@@ -293,7 +310,6 @@ export default {
             ? Schema.uri(childJsonSchema)
             : undefined
           children[childKey] = {
-            value: propertyValue,
             configMapping: this.configMapping,
             uiType: this.uiType,
             propertyPath: childPropertyPath,

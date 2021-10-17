@@ -5,7 +5,7 @@
       :for="componentProps.id"
       >{{ label }}</label
     >
-    <component :is="as" v-model="value" v-bind="componentProps">
+    <component :is="as" v-model="localValue" v-bind="componentProps">
       <slot v-for="item in componentSlots">{{ item }}</slot>
     </component>
   </div>
@@ -15,6 +15,7 @@
 import scrud from '~/mixins/scrud'
 
 export default {
+  name: 'ScrudValue',
   mixins: [scrud],
 }
 </script>
