@@ -15,7 +15,7 @@ export const bootstrapConfigMap = configMap({
   },
   number: {
     render: SimpleContent,
-    input: ['b-form-input', { type: 'number' }],
+    input: ['b-form-input', { type: 'number', number: true }],
   },
   // TODO define a component for date-time using b-date and b-time
   //   'date-time': {

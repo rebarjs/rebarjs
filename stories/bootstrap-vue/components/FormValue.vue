@@ -27,7 +27,12 @@
 <script>
 import * as allRules from 'vee-validate/dist/rules'
 import { Schema } from '@hyperjump/json-schema-core'
-import { ValidationProvider } from 'vee-validate/dist/vee-validate.full.esm'
+import {
+  extend,
+  ValidationProvider,
+} from 'vee-validate/dist/vee-validate.full.esm'
+import Ajv from 'ajv'
+import addFormats from 'ajv-formats'
 import scrud from '~/mixins/scrud'
 
 export default {
@@ -36,36 +41,34 @@ export default {
     'validation-provider': ValidationProvider,
   },
   mixins: [scrud],
-  data() {
-    return {
-      required: undefined,
-    }
-  },
-  async fetch() {
-    await scrud.fetch.call(this)
-    if (this.required === undefined && this.jsonSchema) {
-      const hasRequired = await Schema.has('required', this.jsonSchema)
-      const requiredSchema = hasRequired
-        ? await Schema.step('required', this.jsonSchema)
-        : undefined
-      this.required = requiredSchema ? Schema.value(requiredSchema) : false
-    } else {
-      this.required = false
-    }
-  },
   computed: {
     describedBy() {
-      return this.id + '-feedback'
+      return this.componentProps.id + '-feedback'
     },
     rules() {
       const rules = {
         required: this.required,
       }
-      if (this.componentProps.type && this.componentProps.type in allRules) {
-        rules[this.componentProps.type] = true
+      const type = this.componentProps.type
+      const id = this.componentProps.id
+      if (type && type in allRules) {
+        rules[type] = true
+      }
+      if (this.jsonSchemaValidator) {
+        extend(id, this.jsonSchemaValidator)
+        rules[id] = true
       }
       return rules
-    }
+    },
+    jsonSchemaValidator() {
+      if (this.jsonSchema) {
+        const jsonSchema = Schema.value(this.jsonSchema)
+        const ajv = new Ajv()
+        addFormats(ajv)
+        return ajv.compile(jsonSchema)
+      }
+      return null
+    },
   },
 }
 </script>

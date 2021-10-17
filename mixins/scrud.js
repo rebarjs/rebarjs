@@ -36,6 +36,10 @@ export default {
       type: Object,
       required: false,
     },
+    required: {
+      type: Boolean,
+      required: false,
+    }
   },
 
   data() {
@@ -273,7 +277,15 @@ export default {
       const children = {}
       const propertyValue = await this.getPropertyValue()
       if (typeof propertyValue === 'object') {
+        const jsonSchema = await this.getJsonSchema()
         const childKeys = await this.getAllChildKeys()
+        const hasRequired = await Schema.has('required', jsonSchema)
+        const requiredSchema = hasRequired
+          ? await Schema.step('required', jsonSchema)
+          : undefined
+        const requiredChildren = requiredSchema
+          ? new Set(Schema.value(requiredSchema))
+          : new Set([])
         for (const idx in childKeys) {
           const childKey = childKeys[idx]
           const childPropertyPath = this.propertyPathFor(childKey)
@@ -289,7 +301,6 @@ export default {
               : undefined
           // For now, assume we're using an SDoc from
           // https://github.com/hyperjump-io/json-schema-core
-          const jsonSchema = await this.getJsonSchema()
           const jsonSchemaProperties = jsonSchema
             ? await Schema.step('properties', jsonSchema)
             : undefined
@@ -309,6 +320,7 @@ export default {
           const childJsonSchemaURL = childJsonSchema
             ? Schema.uri(childJsonSchema)
             : undefined
+          const required = requiredChildren.has(childKey)
           children[childKey] = {
             configMapping: this.configMapping,
             uiType: this.uiType,
@@ -318,6 +330,7 @@ export default {
             jsonSchemaURL: childJsonSchemaURL,
             jsonLDContext: childLDContext,
             jsonSchema: childJsonSchema,
+            required,
           }
         }
       }

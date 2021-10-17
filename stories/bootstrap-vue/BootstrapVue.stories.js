@@ -39,7 +39,6 @@ Schema.add(
       aString: {
         type: 'string',
         title: 'A String',
-        required: true,
       },
       aNumber: {
         type: 'number',
@@ -66,6 +65,7 @@ Schema.add(
         title: 'A Link',
       },
     },
+    required: ['aString'],
     definitions: {},
   },
   firstExampleSchemaURL
