@@ -1,5 +1,5 @@
 <template>
-  <validation-provider v-slot="validationContext" :rules="rules">
+  <validation-provider v-slot="validationContext" :rules="rules" :name="label">
     <b-form-group :label="label" :label-for="componentProps.id">
       <component
         :is="as"
