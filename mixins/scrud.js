@@ -279,7 +279,9 @@ export default {
       if (typeof propertyValue === 'object') {
         const jsonSchema = await this.getJsonSchema()
         const childKeys = await this.getAllChildKeys()
-        const hasRequired = await Schema.has('required', jsonSchema)
+        const hasRequired = jsonSchema
+          ? await Schema.has('required', jsonSchema)
+          : undefined
         const requiredSchema = hasRequired
           ? await Schema.step('required', jsonSchema)
           : undefined
