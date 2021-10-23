@@ -5,7 +5,12 @@
       :for="componentProps.id"
       >{{ label }}</label
     >
-    <component :is="as" v-model="localValue" v-bind="componentProps">
+    <component
+      :is="as"
+      v-model="localValue"
+      v-bind="componentProps"
+      :ui-type="uiType"
+    >
       <slot v-for="item in componentSlots">{{ item }}</slot>
     </component>
   </div>

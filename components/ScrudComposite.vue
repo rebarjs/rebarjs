@@ -1,11 +1,11 @@
 <template>
   <div>
     <div v-for="(child, propertyName) in children" :key="propertyName">
-      <!-- <scrud-value v-model="value[propertyName]" v-bind="child" /> -->
       <component
         :is="valueComponent"
         v-model="localValue[propertyName]"
         v-bind="child"
+        :ui-type="uiType"
       />
     </div>
   </div>
@@ -21,8 +21,11 @@ import scrud from '~/mixins/scrud'
 export default {
   mixins: [scrud],
   computed: {
-    valueComponent() {
+    valueComponentMatch() {
       return this.getComponentFor('__value__')
+    },
+    valueComponent() {
+      return this.componentForUIType(this.valueComponentMatch)
     },
   },
 }

@@ -54,15 +54,18 @@ export default {
   },
 
   computed: {
+    currentComponent() {
+      return this.componentForUIType(this.componentMatch)
+    },
     as() {
-      if (Array.isArray(this.componentMatch)) {
-        return this.componentMatch[0]
+      if (Array.isArray(this.currentComponent)) {
+        return this.currentComponent[0]
       }
-      return this.componentMatch
+      return this.currentComponent
     },
     mappingProps() {
-      if (Array.isArray(this.componentMatch)) {
-        return this.componentMatch[1]
+      if (Array.isArray(this.currentComponent)) {
+        return this.currentComponent[1]
       }
       return {}
     },
@@ -118,7 +121,7 @@ export default {
       this.children = await this.getChildren()
     }
     if (this.componentMatch === undefined) {
-      this.componentMatch = await this.getComponent()
+      this.componentMatch = await this.getComponentMatch()
     }
     if (this.label === undefined) {
       this.label = await this.getLabel()
@@ -141,7 +144,22 @@ export default {
       const title = titleSchema ? Schema.value(titleSchema) : undefined
       return title
     },
-    async getComponent() {
+    componentForUIType(match) {
+      if (match) {
+        switch (this.uiType) {
+          case 'post':
+            return match.input
+          case 'put':
+            return match.input
+          case 'get':
+            return match.render
+          default:
+            break
+        }
+      }
+      return undefined
+    },
+    async getComponentMatch() {
       const typeKeys = await this.getTypeKeys()
       let component
       for (const key in typeKeys) {
@@ -157,20 +175,7 @@ export default {
       return component
     },
     getComponentFor(key) {
-      const match = this.configMapping[key]
-      if (match) {
-        switch (this.uiType) {
-          case 'post':
-            return match.input
-          case 'put':
-            return match.input
-          case 'get':
-            return match.render
-          default:
-            break
-        }
-      }
-      return undefined
+      return this.configMapping[key]
     },
     async getTypeKeys() {
       if (this.$_typeKeys === undefined) {
@@ -319,7 +324,6 @@ export default {
           const required = requiredChildren.has(childKey)
           children[childKey] = {
             configMapping: this.configMapping,
-            uiType: this.uiType,
             propertyPath: childPropertyPath,
             // eslint-disable-next-line object-shorthand
             jsonLDContextURL: jsonLDContextURL,

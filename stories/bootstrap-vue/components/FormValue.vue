@@ -14,6 +14,7 @@
             : null
         "
         :aria-describedby="describedBy"
+        :ui-type="uiType"
       >
         <slot v-for="item in componentSlots">{{ item }}</slot>
       </component>
