@@ -54,6 +54,16 @@ export default {
   },
 
   computed: {
+    renderType() {
+      switch (this.uiType) {
+        case 'get':
+          return 'render'
+        case 'post':
+        case 'put':
+          return 'input'
+      }
+      return undefined
+    },
     currentComponent() {
       return this.componentForUIType(this.componentMatch)
     },
@@ -146,16 +156,7 @@ export default {
     },
     componentForUIType(match) {
       if (match) {
-        switch (this.uiType) {
-          case 'post':
-            return match.input
-          case 'put':
-            return match.input
-          case 'get':
-            return match.render
-          default:
-            break
-        }
+        return match[this.renderType]
       }
       return undefined
     },

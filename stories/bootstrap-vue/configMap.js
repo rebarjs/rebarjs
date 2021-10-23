@@ -1,10 +1,11 @@
+import BRebarForm from './components/BRebarForm'
 import FormValue from './components/FormValue'
 import ScrudValue from '~/components/ScrudValue'
 import SimpleContent from '~/components/SimpleContent'
 import { configMap } from '~/utils/configMapping'
 
 export const bootstrapConfigMap = configMap({
-  __form__: 'b-form',
+  __form__: BRebarForm,
   __value__: {
     render: ScrudValue,
     input: FormValue,

@@ -19,12 +19,8 @@ const FormTemplate = (args, { argTypes }) => ({
       alert(JSON.stringify(this.propertyValue))
     },
   },
-  template: `
-    <b-form @submit="onSubmit">
-      <ScrudComposite v-model="$props.propertyValue" v-bind="$props"></ScrudComposite>
-      <b-button type="submit" variant="primary">Submit</b-button>
-    </b-form>
-    `,
+  template:
+    '<ScrudComposite v-model="$props.propertyValue" v-bind="$props" :form="true"></ScrudComposite>',
 })
 
 const firstExampleSchemaURL =
