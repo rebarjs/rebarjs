@@ -6,7 +6,7 @@
       v-model="content"
       v-bind="formComponentProps"
       :ui-type="currentUiType"
-      :json-schema="$_jsonSchema"
+      :json-schema="currentSchema"
       @submit="onSubmit"
     >
     </component>
@@ -65,12 +65,17 @@ export default {
     return {
       content: {},
       currentUiType: this.uiType,
+      schemaByUiType: undefined,
+      ldContextByUiType: undefined, // stub for the future
     }
   },
   // eslint-disable-next-line require-await
   async fetch() {
-    if (this.$_jsonSchema === undefined) {
-      this.$_jsonSchema = await this.getJsonSchema()
+    if (this.schemaByUiType === undefined) {
+      this.schemaByUiType = {}
+      this.schemaByUiType.post = await this.getOperationSchemaFor('post')
+      this.schemaByUiType.get = await this.getOperationSchemaFor('get')
+      this.schemaByUiType.put = await this.getOperationSchemaFor('put')
     }
     if (this.children === undefined) {
       this.children = await this.getChildren()
@@ -85,7 +90,7 @@ export default {
   },
   computed: {
     isInput() {
-      return this.currentUiType === 'post' || this.currentUiType === 'put'
+      return this.isInputOperation(this.currentUiType)
     },
     localValue: {
       get() {
@@ -95,6 +100,12 @@ export default {
         this.$emit('input', localValue)
       },
     },
+    currentSchema() {
+      if (this.currentUiType && this.schemaByUiType) {
+        return this.schemaByUiType[this.currentUiType]
+      }
+      return undefined
+    }
   },
   watch: {
     uiType: {
@@ -104,10 +115,16 @@ export default {
     },
   },
   methods: {
+    isInputOperation(operation) {
+      return operation === 'post' || operation === 'put'
+    },
     async getOperationSchema() {
-      const operation = await this.getOperation()
+      return await this.getOperationSchemaFor(this.currentUiType)
+    },
+    async getOperationSchemaFor(uiType) {
+      const operation = await this.getOperationFor(uiType)
       let content
-      if (this.isInput) {
+      if (this.isInputOperation(uiType)) {
         const requestBody = operation ? operation.requestBody : undefined
         content = requestBody ? requestBody.content : undefined
       } else {
@@ -118,6 +135,9 @@ export default {
       }
       const mediaType = content ? content['application/json'] : undefined
       const schema = mediaType ? mediaType.schema : undefined
+      if (schema && schema.$ref) {
+        return await Schema.get(schema.$ref)
+      }
       return schema
     },
     async getContentJsonSchema() {
@@ -127,7 +147,7 @@ export default {
       }
       // TODO handle inline schema definition, may need to generate an id!!
       // and cache results
-      return undefined
+      return schema
     },
     async getContentJsonSchemaURL() {
       const schema = await this.getOperationSchema()
@@ -139,9 +159,12 @@ export default {
       return undefined
     },
     async getOperation() {
+      return await this.getOperationFor(this.currentUiType)
+    },
+    async getOperationFor(uiType) {
       const schema = await this.getOpenApiSchema()
-      if (schema && this.uiType) {
-        return schema[this.uiType]
+      if (schema && uiType) {
+        return schema[uiType]
       }
       return undefined
     },
