@@ -145,6 +145,11 @@ export default {
       },
       deep: true,
     },
+    jsonSchema: {
+      handler(newVal) {
+        this.$fetch()
+      },
+    },
   },
 
   methods: {
@@ -248,7 +253,7 @@ export default {
             this.$_jsonSchema = await Schema.get(jsonSchemaURL)
           }
         }
-        this.$_jsonSchema = this.$_jsonSchema || null
+        this.$_jsonSchema = this.$_jsonSchema || undefined
       }
       return this.$_jsonSchema
     },
@@ -267,7 +272,7 @@ export default {
         }
         this.$_jsonLDContext = this.$_jsonLDContext
           ? this.$_jsonLDContext
-          : null
+          : undefined
       }
       return this.jsonLDContext
     },

@@ -19,51 +19,10 @@
 </template>
 
 <script>
-import scrud from '~/mixins/scrud'
+import scrudComposite from '~/mixins/scrudComposite'
 
-/**
- * Build a SCRUD component for an object using a ScrudValue or ScrudComposite for each
- * property.
- */
 export default {
-  mixins: [scrud],
-  props: {
-    form: {
-      type: [Boolean, String, Object],
-      default: undefined,
-    },
-  },
-  computed: {
-    valueComponentMatch() {
-      return this.getComponentFor('__value__')
-    },
-    valueComponent() {
-      return this.componentForUIType(this.valueComponentMatch)
-    },
-    formComponentMatch() {
-      let match
-      if (this.form) {
-        match = this.form
-      }
-      if (typeof match === 'boolean' && match) {
-        match = this.getComponentFor('__form__')
-      }
-      return match
-    },
-    formComponent() {
-      if (Array.isArray(this.formComponentMatch)) {
-        return this.formComponentMatch[0]
-      }
-      return this.formComponentMatch
-    },
-    formComponentProps() {
-      const formProps = Array.isArray(this.formComponentMatch)
-        ? this.formComponentMatch[1]
-        : {}
-      const parentProps = { ...this.$props }
-      parentProps.form = false
-      return { ...parentProps, ...formProps }
-    },
-  },
+  name: 'ScrudComposite',
+  mixins: [scrudComposite],
 }
 </script>
