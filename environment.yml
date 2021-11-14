@@ -1,0 +1,9 @@
+name: scrud-nuxt
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - nodejs
+  - openssl=1.1.1l
+  - python
+  - yarn

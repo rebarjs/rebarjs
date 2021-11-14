@@ -1,6 +1,6 @@
 import { Schema } from '@hyperjump/json-schema-core'
 import { bootstrapConfigMap } from './configMap'
-import OpenApiComponent from './components/OpenApiComponent'
+import PathItem from './components/PathItem'
 
 // OpenAPI v3.1
 // const openapi_v3_1_URL = 'https://spec.openapis.org/oas/3.1/schema/2021-09-28'
@@ -88,10 +88,10 @@ export default {
 const SimpleRetrieveUpdateDeleteTemplate = (args, { argTypes }) => ({
   props: [...Object.keys(argTypes)],
   template: `
-      <OpenApiComponent v-bind="$props""></OpenApiComponent>
+      <PathItem v-bind="$props""></PathItem>
     `,
   components: {
-    OpenApiComponent,
+    PathItem,
   },
 })
 

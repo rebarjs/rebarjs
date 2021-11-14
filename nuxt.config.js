@@ -59,7 +59,11 @@ export default {
     transpile: ['vee-validate/dist/rules'],
   },
   storybook: {
-    addons: ['@storybook/addon-controls', '@storybook/addon-notes'],
+    addons: [
+      '@storybook/addon-controls',
+      '@storybook/addon-notes',
+      '@storybook/addon-actions',
+    ],
     stories: ['~/**/*.stories.js', '~/stories/**/*.stories.js'],
   },
   vue: {

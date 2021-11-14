@@ -8,10 +8,9 @@
 </template>
 
 <script>
-import { ValidationObserver } from 'vee-validate';
+import { ValidationObserver } from 'vee-validate'
 import ScrudComposite from '../../../components/ScrudComposite.vue'
 import scrud from '~/mixins/scrud'
-
 
 export default {
   name: 'BRebarForm',
