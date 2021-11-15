@@ -1,4 +1,4 @@
-name: scrud-nuxt
+name: rebar-nuxt
 channels:
   - conda-forge
   - defaults

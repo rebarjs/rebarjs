@@ -1,17 +1,17 @@
 <template>
   <div>
     <div v-for="(child, propertyName) in children" :key="propertyName">
-      <scrud-value v-bind="child" />
+      <rebar-value v-bind="child" />
     </div>
   </div>
 </template>
 
 <script>
 // eslint-disable-next-line camelcase
-import scrud_resource from '~/mixins/scrud_resource'
+import rebar_resource from '~/mixins/rebar_resource'
 
 export default {
   // eslint-disable-next-line camelcase
-  mixins: [scrud_resource],
+  mixins: [rebar_resource],
 }
 </script>

@@ -1,7 +1,7 @@
-import scrud from '~/mixins/scrud'
+import rebar from '~/mixins/rebar'
 
 export default {
-  mixins: [scrud],
+  mixins: [rebar],
   props: {
     form: {
       type: [Boolean, String, Object],

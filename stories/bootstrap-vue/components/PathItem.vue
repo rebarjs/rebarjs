@@ -26,11 +26,11 @@
 
 <script>
 import { Schema } from '@hyperjump/json-schema-core'
-import scrudComposite from '~/mixins/scrudComposite'
+import rebarComposite from '~/mixins/rebarComposite'
 
 export default {
   name: 'OpenApiComponent',
-  mixins: [scrudComposite],
+  mixins: [rebarComposite],
   props: {
     configMapping: {
       type: Object,

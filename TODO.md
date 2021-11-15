@@ -18,13 +18,13 @@
     * Context, no schema
     * Schema and Context
     * SCRUDful!!
-* Stories demonstrating Components that use ScrudComposite
+* Stories demonstrating Components that use RebarComposite
 * Storybooks for OpenAPI/Swagger apps
 * List/Detail style app!
 
 ## Components
 
-* ScrudComponent
+* RebarComponent
 * OpenAPIComponent
-* ScrudBrowser component
+* RebarBrowser component
 * OpenAPIBrowser component

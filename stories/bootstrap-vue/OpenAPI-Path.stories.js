@@ -5,7 +5,7 @@ import PathItem from './components/PathItem'
 // OpenAPI v3.1
 // const openapi_v3_1_URL = 'https://spec.openapis.org/oas/3.1/schema/2021-09-28'
 
-const ProfileSchemaURL = 'http://scrudful.org/json-schema/storybook/Profile'
+const ProfileSchemaURL = 'http://rebarful.org/json-schema/storybook/Profile'
 Schema.add(
   {
     $schema: 'https://json-schema.org/draft/2019-09/schema',

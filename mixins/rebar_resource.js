@@ -1,12 +1,12 @@
-import scrud from '~/mixins/scrud'
-import ScrudValue from '~/components/ScrudValue.vue'
+import rebar from '~/mixins/rebar'
+import RebarValue from '~/components/RebarValue.vue'
 
 /**
- * Build a SCRUD component for an object given the URL of the object and/or its value.
+ * Build a REBAR component for an object given the URL of the object and/or its value.
  */
 export default {
-  components: { ScrudValue },
-  mixins: [scrud],
+  components: { RebarValue },
+  mixins: [rebar],
   props: {
     propertyName: {
       type: String,

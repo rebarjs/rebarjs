@@ -17,14 +17,14 @@
 import { Schema } from '@hyperjump/json-schema-core'
 import { ValidationObserver } from 'vee-validate'
 import SwaggerClient from 'swagger-client'
-import scrudComposite from '~/mixins/scrudComposite'
+import rebarComposite from '~/mixins/rebarComposite'
 
 export default {
   name: 'Parameters',
   components: {
     ValidationObserver,
   },
-  mixins: [scrudComposite],
+  mixins: [rebarComposite],
   props: {
     value: {
       type: Object,

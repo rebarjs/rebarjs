@@ -1,14 +1,14 @@
-import ScrudComposite from '../components/ScrudComposite.vue'
-import ScrudValue from '~/components/ScrudValue'
+import RebarComposite from '../components/RebarComposite.vue'
+import RebarValue from '~/components/RebarValue'
 
 export const baseConfigMap = {
   __value__: {
-    input: ScrudValue,
-    render: ScrudValue,
+    input: RebarValue,
+    render: RebarValue,
   },
   object: {
-    input: ScrudComposite,
-    render: ScrudComposite,
+    input: RebarComposite,
+    render: RebarComposite,
   },
 }
 

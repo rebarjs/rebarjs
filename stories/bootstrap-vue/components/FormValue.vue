@@ -34,14 +34,14 @@ import {
 } from 'vee-validate/dist/vee-validate.full.esm'
 import Ajv from 'ajv'
 import addFormats from 'ajv-formats'
-import scrud from '~/mixins/scrud'
+import rebar from '~/mixins/rebar'
 
 export default {
   name: 'FormValue',
   components: {
     'validation-provider': ValidationProvider,
   },
-  mixins: [scrud],
+  mixins: [rebar],
   computed: {
     describedBy() {
       return this.componentProps.id + '-feedback'

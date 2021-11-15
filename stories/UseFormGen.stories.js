@@ -19,7 +19,7 @@ SimpleExample.args = {
     data: {
       as: SimpleContent,
       props: {
-        value: 'Hello, SCRUD!',
+        value: 'Hello, REBAR!',
       },
     },
   },
@@ -34,5 +34,5 @@ UseMyButton.args = {
       props: {},
     },
   },
-  content: 'Hello, SCRUD!',
+  content: 'Hello, REBAR!',
 }

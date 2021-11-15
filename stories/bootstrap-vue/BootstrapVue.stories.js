@@ -8,7 +8,7 @@ export default {
 const DisplayTemplate = (args, { argTypes }) => ({
   props: [...Object.keys(argTypes)],
   template:
-    '<ScrudComposite v-model="$props.propertyValue" v-bind="$props"></ScrudComposite>',
+    '<RebarComposite v-model="$props.propertyValue" v-bind="$props"></RebarComposite>',
 })
 
 const FormTemplate = (args, { argTypes }) => ({
@@ -20,11 +20,11 @@ const FormTemplate = (args, { argTypes }) => ({
     },
   },
   template:
-    '<ScrudComposite v-model="$props.propertyValue" v-bind="$props" :form="true"></ScrudComposite>',
+    '<RebarComposite v-model="$props.propertyValue" v-bind="$props" :form="true"></RebarComposite>',
 })
 
 const firstExampleSchemaURL =
-  'http://scrudful.org/json-schema/storybook/bootstrap-vue/BootStrapVue'
+  'http://rebarful.org/json-schema/storybook/bootstrap-vue/BootStrapVue'
 
 Schema.add(
   {

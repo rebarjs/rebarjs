@@ -19,10 +19,10 @@
 </template>
 
 <script>
-import scrudComposite from '~/mixins/scrudComposite'
+import rebarComposite from '~/mixins/rebarComposite'
 
 export default {
-  name: 'ScrudComposite',
-  mixins: [scrudComposite],
+  name: 'RebarComposite',
+  mixins: [rebarComposite],
 }
 </script>

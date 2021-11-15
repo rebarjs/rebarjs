@@ -1,4 +1,4 @@
-# scrud-nuxt
+# rebar-nuxt
 
 ## Build Setup
 

@@ -2,19 +2,19 @@ import { Schema } from '@hyperjump/json-schema-core'
 import SimpleContent from '~/components/SimpleContent'
 import String from '~/stories/components/String'
 import MyButton from '~/stories/components/MyButton'
-import ScrudValue from '~/components/ScrudValue'
+import RebarValue from '~/components/RebarValue'
 import { configMap } from '~/utils/configMapping'
 
 export default {
-  title: 'ScrudValue',
-  component: ScrudValue,
+  title: 'RebarValue',
+  component: RebarValue,
 }
 
 const Template = (args, { argTypes }) => ({
-  components: { ScrudValue },
+  components: { RebarValue },
   props: [...Object.keys(argTypes), 'content'],
   template:
-    '<ScrudValue v-model="$props.propertyValue" v-bind="$props">{{ content }}</ScrudValue>',
+    '<RebarValue v-model="$props.propertyValue" v-bind="$props">{{ content }}</RebarValue>',
 })
 
 const configMappingOnlyDefault = configMap({
@@ -27,7 +27,7 @@ const configMappingOnlyDefault = configMap({
 export const NoContextNoSchemaUseDefault = Template.bind({})
 NoContextNoSchemaUseDefault.args = {
   propertyName: 'data',
-  propertyValue: 'Hi, SCRUD!',
+  propertyValue: 'Hi, REBAR!',
   configMapping: configMappingOnlyDefault,
   uiType: 'get',
 }
@@ -46,16 +46,16 @@ const configMapping = configMap(
 export const NoContextNoSchema = Template.bind({})
 NoContextNoSchema.args = {
   propertyName: 'data',
-  propertyValue: 'Hi, SCRUD!',
+  propertyValue: 'Hi, REBAR!',
   configMapping,
   uiType: 'get',
 }
 
-const scrudValueURL = 'http://scrudful.org/json-schema/storybook/ScrudValue'
-const scrudValueURLRoot = scrudValueURL + '#'
+const rebarValueURL = 'http://rebarful.org/json-schema/storybook/RebarValue'
+const rebarValueURLRoot = rebarValueURL + '#'
 const configWithJsonSchemaMappings = configMap({}, configMapping)
-// configWithJsonSchemaMappings[scrudValueURL + '#'] = {
-configWithJsonSchemaMappings[scrudValueURLRoot] = {
+// configWithJsonSchemaMappings[rebarValueURL + '#'] = {
+configWithJsonSchemaMappings[rebarValueURLRoot] = {
   input: MyButton,
   render: MyButton,
 }
@@ -63,7 +63,7 @@ configWithJsonSchemaMappings[scrudValueURLRoot] = {
 Schema.add(
   {
     $schema: 'https://json-schema.org/draft/2019-09/schema',
-    $id: scrudValueURL,
+    $id: rebarValueURL,
     type: 'object',
     properties: {
       renderAsButton: {
@@ -88,13 +88,13 @@ Schema.add(
       },
     },
   },
-  scrudValueURL
+  rebarValueURL
 )
 export const NoContext = Template.bind({})
 NoContext.args = {
   propertyName: 'data',
-  propertyValue: 'Hi, SCRUD',
+  propertyValue: 'Hi, REBAR',
   configMapping: configWithJsonSchemaMappings,
   uiType: 'get',
-  jsonSchemaURL: scrudValueURL,
+  jsonSchemaURL: rebarValueURL,
 }

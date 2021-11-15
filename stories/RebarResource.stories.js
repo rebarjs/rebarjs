@@ -1,17 +1,17 @@
 import SimpleContent from '~/components/SimpleContent.vue'
 import String from '~/stories/components/String.vue'
-import ScrudResource from '~/components/ScrudResource.vue'
+import RebarResource from '~/components/RebarResource.vue'
 import { configMap } from '~/utils/configMapping'
 
 export default {
-  title: 'ScrudResource',
-  component: ScrudResource,
+  title: 'RebarResource',
+  component: RebarResource,
 }
 
 const Template = (args, { argTypes }) => ({
-  components: { ScrudResource },
+  components: { RebarResource },
   props: [...Object.keys(argTypes)],
-  template: '<ScrudResource v-bind="$props"></ScrudResource>',
+  template: '<RebarResource v-bind="$props"></RebarResource>',
 })
 
 const configMappingOnlyDefault = configMap({
@@ -24,7 +24,7 @@ const configMappingOnlyDefault = configMap({
 export const NoContextNoSchemaUseDefault = Template.bind({})
 NoContextNoSchemaUseDefault.args = {
   propertyValue: {
-    greeting: 'Hi, SCRUD!',
+    greeting: 'Hi, REBAR!',
     response: 'Hi, yourself!',
   },
   configMapping: configMappingOnlyDefault,
@@ -44,7 +44,7 @@ const configMappingWithString = configMap(
 export const NoContextNoSchema = Template.bind({})
 NoContextNoSchema.args = {
   propertyValue: {
-    greeting: 'Hi, SCRUD!',
+    greeting: 'Hi, REBAR!',
     response: 'Hi, yourself!',
   },
   configMapping: configMappingWithString,

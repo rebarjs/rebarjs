@@ -17,10 +17,10 @@
 </template>
 
 <script>
-import scrud from '~/mixins/scrud'
+import rebar from '~/mixins/rebar'
 
 export default {
-  name: 'ScrudValue',
-  mixins: [scrud],
+  name: 'RebarValue',
+  mixins: [rebar],
 }
 </script>

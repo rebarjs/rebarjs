@@ -1,7 +1,7 @@
 <template>
   <ValidationObserver v-slot="{ handleSubmit }">
     <b-form @submit.prevent="handleSubmit(onSubmit)">
-      <scrud-composite v-model="$props.value" v-bind="$props"></scrud-composite>
+      <rebar-composite v-model="$props.value" v-bind="$props"></rebar-composite>
       <b-button type="submit" variant="primary">Submit</b-button>
     </b-form>
   </ValidationObserver>
@@ -9,16 +9,16 @@
 
 <script>
 import { ValidationObserver } from 'vee-validate'
-import ScrudComposite from '../../../components/ScrudComposite.vue'
-import scrud from '~/mixins/scrud'
+import RebarComposite from '../../../components/RebarComposite.vue'
+import rebar from '~/mixins/rebar'
 
 export default {
   name: 'BRebarForm',
   components: {
-    ScrudComposite,
+    RebarComposite,
     ValidationObserver,
   },
-  mixins: [scrud],
+  mixins: [rebar],
   methods: {
     onSubmit() {
       this.$emit('submit')
