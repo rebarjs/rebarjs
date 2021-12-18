@@ -1,4 +1,4 @@
-![Rebarjs Logo](rebarjs-logo.png)
+![Rebarjs Logo](rebarjs-logo-sm.png)
 # Rebarjs
 A rapid user interface construction toolkit for JSON REST APIs that builds upon
 existing standards and frameworks. The first Javascript UI framework supported
