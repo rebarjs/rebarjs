@@ -1,4 +1,18 @@
-# rebar-nuxt
+![Rebarjs Logo](rebarjs-logo.png)
+# Rebarjs
+A rapid user interface construction toolkit for JSON REST APIs that builds upon
+existing standards and frameworks. The first Javascript UI framework supported
+is Vue/Nuxt. Contributions to add React/Next, Angular, and others are welcome
+and encouraged!
+
+## Goals
+* To use all available information about a JSON endpoint to produce a user interface for that endpoint.
+  The information used to inform the creation of the user interface includes and isn't limited to:
+  * JSON Schema
+  * JSON-LD Contexts
+  * OpenAPI or Swagger documents
+* To enable UI configurations to be shared across the entire application.
+* To make it easy to combine, extend, and override configurations.
 
 ## Build Setup
 
